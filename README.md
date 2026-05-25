@@ -1,77 +1,224 @@
-Problem Description
+# 📌 Introduction
 
- What is Customer Churn?
- Customer churn means when a customer leaves the company.
- It is a big problem because getting new customers costs more than
-keeping existing ones.
- Why it matters?
- Losing customers means losing money.
- Predicting churn helps companies act early.
+Le churn client représente le fait qu’un client quitte une entreprise ou arrête d’utiliser ses services.
+Ce phénomène est très important pour les entreprises car conserver un client coûte moins cher que d’en acquérir un nouveau.
 
-Dataset Overview
+L’objectif de ce projet est d’analyser le comportement des clients et de construire un modèle de Machine Learning capable de prédire si un client va quitter l’entreprise ou rester.
 
- Dataset size:
+---
 
- 200 customers
- 5 columns
- Features:
- Monthly_Usage : usage per month
- Customer_Support_Calls : number of support calls
- Subscription_Length : months with the company
- Payment_Delay : delayed payment days
- Churn:
- 0 = Stay
- 1=Leave
+# 📊 Description du Dataset
 
-Data Exploration
+Le dataset utilisé contient plusieurs informations sur les clients :
 
- What did we find?
- No missing values (clean dataset)
- Customers have different usage and support call patterns
- Churn is not balanced (more customers leave than stay)
+| Variable               | Description                           |
+| ---------------------- | ------------------------------------- |
+| Monthly_Usage          | Utilisation mensuelle du service      |
+| Customer_Support_Calls | Nombre d’appels au support client     |
+| Subscription_Length    | Durée d’abonnement en mois            |
+| Payment_Delay          | Nombre de jours de retard de paiement |
+| Churn                  | 0 = Client reste / 1 = Client quitte  |
 
-Visualizations
+Le fichier utilisé est :
+`customer_churn_dataset.csv`
 
- Insights:
+---
 
- Customers who call support more tend to churn
- Payment delays are higher for churned customers
- Churned customers show different behavior patterns
+# 🔍 Exploration des Données
 
-Machine Learning Model
+La première étape consiste à explorer les données avec la bibliothèque Pandas.
 
- Machine Learning Model
- Model used: Logistic Regression
- Why Logistic Regression?
- Churn is a binary problem (Stay / Leave)
- Simple and interpretable model
- Features used:
- Monthly_Usage
- Customer_Support_Calls
- Subscription_Length
- Payment_Delay
+Les fonctions utilisées :
 
-Results
+```python
+df.head()
+df.info()
+df.describe()
+```
 
- Accuracy: 0,925
- Confusion Matrix shows:
- Correct predictions
- Some wrong predictions
+Ces fonctions permettent de :
 
-Predictions
+* afficher les premières lignes du dataset,
+* vérifier les types de données,
+* détecter les valeurs manquantes,
+* obtenir des statistiques générales.
 
- Example:
- new_customer = [30, 5, 6, 10]
- Prediction:
- 1 → Customer likely to leave
+Après vérification, les données sont propres et ne contiennent pas de valeurs manquantes importantes.
 
-Conclusion
+---
 
- Key Insights:
-• Customers with many support calls are more likely to churn
-• Payment delay is an important factor
-• Model cannot be trusted 100%
- Business Recommendations:
-• Improve customer support quality
-• Follow up customers with payment delays
-• Offer promotions to high-risk customers# Project-Customer-Churn-Prediction_PYTHON_GOOGLE-COLAB
+# 📈 Visualisation des Données
+
+Afin de mieux comprendre les relations entre les variables et le churn, plusieurs graphiques ont été réalisés.
+
+## 1️⃣ Distribution du Churn
+
+Un graphique en barres montre le nombre de clients qui restent et ceux qui quittent l’entreprise.
+
+### Observation :
+
+On peut facilement comparer les deux catégories de clients.
+
+---
+
+## 2️⃣ Monthly Usage vs Churn
+
+Un graphique scatter plot permet de visualiser la relation entre l’utilisation mensuelle et le churn.
+
+### Observation :
+
+Les clients ayant une faible utilisation du service semblent plus susceptibles de quitter l’entreprise.
+
+---
+
+## 3️⃣ Customer Support Calls vs Churn
+
+Un boxplot montre la relation entre les appels au support et le churn.
+
+### Observation :
+
+Les clients qui contactent fréquemment le support client ont tendance à quitter davantage l’entreprise.
+
+---
+
+# 🤖 Préparation des Données
+
+Les données ont été séparées en :
+
+* Variables explicatives `X`
+* Variable cible `y`
+
+```python
+X = df.drop('Churn', axis=1)
+y = df['Churn']
+```
+
+Ensuite, les données ont été divisées en :
+
+* 80% pour l’entraînement
+* 20% pour le test
+
+```python
+train_test_split()
+```
+
+---
+
+# 🧠 Modèle de Machine Learning
+
+Le modèle utilisé est :
+
+# Logistic Regression
+
+Ce modèle est adapté aux problèmes de classification binaire :
+
+* 0 → Client reste
+* 1 → Client quitte
+
+Le modèle a été entraîné avec :
+
+```python
+model.fit(X_train, y_train)
+```
+
+---
+
+# 📊 Évaluation du Modèle
+
+Après l’entraînement, le modèle a été testé sur les données de test.
+
+## Accuracy
+
+L’accuracy mesure le pourcentage de prédictions correctes.
+
+```python
+accuracy_score()
+```
+
+### Résultat :
+
+Le modèle atteint une bonne précision pour prédire le churn des clients.
+
+---
+
+## Confusion Matrix
+
+La matrice de confusion permet d’analyser :
+
+* les bonnes prédictions,
+* les erreurs du modèle.
+
+Elle montre combien de clients ont été correctement classés.
+
+---
+
+# 🔮 Prédictions
+
+Le modèle peut maintenant prédire le comportement de nouveaux clients.
+
+## Exemple :
+
+```python
+new_customer = [[45, 8, 6, 15]]
+```
+
+Ce client :
+
+* utilise peu le service,
+* contacte souvent le support,
+* paie avec retard.
+
+➡ Le modèle peut prédire que ce client risque de quitter l’entreprise.
+
+---
+
+# 📌 Interprétation des Résultats
+
+Les clients les plus susceptibles de quitter l’entreprise sont ceux qui :
+
+* ont beaucoup de retards de paiement,
+* utilisent peu le service,
+* contactent souvent le support client.
+
+Les variables les plus importantes semblent être :
+
+* Payment_Delay
+* Customer_Support_Calls
+
+Même si le modèle donne de bons résultats, il n’est pas fiable à 100% car certains comportements des clients ne sont pas présents dans les données.
+
+---
+
+# 💡 Recommandations pour Réduire le Churn
+
+L’entreprise peut réduire le churn en :
+
+* améliorant le service client,
+* offrant des récompenses aux clients fidèles,
+* détectant rapidement les clients à risque,
+* réduisant les problèmes de paiement.
+
+---
+
+# ✅ Conclusion
+
+Ce projet a permis :
+
+* d’explorer un dataset réel,
+* de visualiser les données,
+* de construire un modèle de Machine Learning,
+* de prédire le churn client.
+
+Le modèle Logistic Regression donne des résultats satisfaisants et peut aider l’entreprise à prendre de meilleures décisions pour fidéliser ses clients.
+
+---
+
+# 🛠 Technologies Utilisées
+
+* Python
+* Google Colab
+* Pandas
+* Matplotlib
+* Seaborn
+* Scikit-learn
+
